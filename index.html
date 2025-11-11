@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gioco Piano Cartesiano</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #8B0000 0%, #DC143C 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #ffffff;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 50px;
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+            border: 3px solid #8B0000;
+        }
+
+        h1 {
+            color: #8B0000;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            color: #DC143C;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        input[type="password"], input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+            border: 2px solid #DC143C;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        button {
+            background: #8B0000;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            margin: 10px;
+        }
+
+        button:hover {
+            background: #DC143C;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 0, 0, 0.3);
+        }
+
+        .error {
+            color: #DC143C;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .game-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        #canvas {
+            border: 3px solid #8B0000;
+            border-radius: 10px;
+            background: white;
+            cursor: crosshair;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: block;
+            margin: 20px auto;
+        }
+
+        .instruction-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            color: #856404;
+            text-align: left;
+        }
+
+        .coordinate-display {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            color: #0d47a1;
+            font-size: 1.1em;
+        }
+
+        .points-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .point-item {
+            background: #8B0000;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .point-item.completed {
+            background: #228B22;
+        }
+
+        .checkmark {
+            font-size: 4em;
+            color: #228B22;
+            margin-bottom: 20px;
+        }
+
+        .final-message {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            padding: 40px;
+            border-radius: 15px;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 3px solid #DAA520;
+        }
+
+        .latin-phrase {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #8B0000;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            margin: 30px 0;
+            font-family: 'Times New Roman', serif;
+            letter-spacing: 2px;
+        }
+
+        .congratulations-text {
+            color: #333;
+            font-size: 1.3em;
+            line-height: 1.8;
+            margin: 20px 0;
+        }
+
+        .trophy {
+            font-size: 5em;
+            margin: 20px 0;
+        }
+
+        .reset-btn {
+            background: #DC143C;
+            margin-top: 20px;
+        }
+
+        .reset-btn:hover {
+            background: #8B0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Pagina 1: Richiesta Password -->
+        <div id="page1" class="page active">
+            <h1>Step 4</h1>
+            <p class="subtitle">Inserisci la password per continuare</p>
+            
+            <input type="password" id="passwordInput" placeholder="Inserisci la password" />
+            <button onclick="checkInitialPassword()">Conferma</button>
+            <p id="errorMsg1" class="error"></p>
+        </div>
+
+        <!-- Pagina 2: Gioco Piano Cartesiano -->
+        <div id="page2" class="page">
+            <h1>Piano Cartesiano Interattivo</h1>
+            <p class="subtitle">Trova e clicca tutti i punti indicati!</p>
+            
+            <div class="game-section">
+                <div class="instruction-box">
+                    <strong>Istruzioni:</strong><br>
+                    Clicca sul piano cartesiano per posizionare i punti nelle coordinate indicate.<br>
+                    Devi trovare tutti i 5 punti per completare il gioco!
+                </div>
+
+                <div class="coordinate-display" id="coordDisplay">
+                    Clicca sul piano per vedere le coordinate
+                </div>
+
+                <canvas id="canvas" width="600" height="600"></canvas>
+
+                <div style="margin: 20px 0;">
+                    <strong style="color: #8B0000; font-size: 1.2em;">Punti da trovare:</strong>
+                    <div class="points-list" id="pointsList"></div>
+                </div>
+
+                <div style="color: #333; margin-top: 20px;">
+                    <strong>Punti trovati: <span id="foundCount" style="color: #228B22;">0</span> / 5</strong>
+                </div>
+
+                <button class="reset-btn" onclick="resetGame()">Ricomincia</button>
+            </div>
+
+            <div class="instruction-box" style="background: #e3f2fd; border-color: #2196f3; color: #0d47a1;">
+                <strong>Cos'è il Piano Cartesiano?</strong><br>
+                Il piano cartesiano è un sistema di riferimento formato da due assi perpendicolari (x e y) 
+                che si incontrano nell'origine (0,0). Ogni punto ha due coordinate: la prima indica la posizione 
+                sull'asse orizzontale (x), la seconda su quello verticale (y).
+            </div>
+        </div>
+
+        <!-- Pagina 3: Congratulazioni Finali -->
+        <div id="page3" class="page">
+            <div class="trophy"></div>
+            <h1>COMPLIMENTI!</h1>
+            <p class="subtitle">Hai completato tutto il percorso!</p>
+            
+            <div class="final-message">
+                <div class="checkmark">✓</div>
+                
+                <div class="congratulations-text">
+                    Questi giochi hanno richiesto capacità in:
+                    <br><br>
+                    <strong>Informatica</strong> - Risoluzione problemi logici<br>
+                    <strong>Enigmistica</strong> - Pensiero critico e creatività<br>
+                    <strong>Matematica</strong> - Geometria analitica e coordinate<br>
+                    <strong>Cultura</strong> - Conoscenza e perseveranza
+                </div>
+
+                <div class="latin-phrase">
+                    PROGRESSUS<br>
+                    LUMEN<br>
+                    HUMANITATIS<br>
+                    EST
+                </div>
+
+                <div style="background: rgba(255,255,255,0.8); padding: 20px; border-radius: 10px; margin-top: 30px;">
+                    <p style="color: #8B0000; font-size: 1.2em; font-style: italic;">
+                        "Il progresso è la luce dell'umanità"
+                    </p>
+                    <p style="color: #666; margin-top: 15px; font-size: 1em;">
+                        La scuola non è un retrogrado bastione dell'antichità,<br>
+                        Ma un sempre rinnovato trampolino verso il futuro.
+                    </p>
+                </div>
+            </div>
+
+            <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin-top: 30px; border: 2px solid #8B0000;">
+                <h2 style="color: #8B0000; margin-bottom: 20px;">Percorso Completato!</h2>
+                <div style="color: #333; text-align: left; max-width: 500px; margin: 0 auto; line-height: 2;">
+                    Step 1: Superato<br>
+                    Step 2: Superato<br>
+                    Step 3: Rebus Risolto<br>
+                    ✅ Step 4: Piano Cartesiano Completato<br>
+                </div>
+            </div>
+
+            <p style="color: #666; margin-top: 30px; font-size: 1.1em;">
+                Grazie per aver partecipato a questo viaggio educativo!
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Configurazione gioco
+        const targetPoints = [
+            {x: 3, y: 4, found: false},
+            {x: -2, y: 3, found: false},
+            {x: 4, y: -2, found: false},
+            {x: -3, y: -4, found: false},
+            {x: 0, y: 0, found: false}
+        ];
+
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const tolerance = 0.5; // Tolleranza per il click
+
+        // Pagina 1: Controllo password iniziale
+        function checkInitialPassword() {
+            const password = document.getElementById('passwordInput').value.toUpperCase();
+            const correctPassword = 'HUMANITATIS';
+            
+            if (password === correctPassword) {
+                document.getElementById('page1').classList.remove('active');
+                document.getElementById('page2').classList.add('active');
+                document.getElementById('errorMsg1').textContent = '';
+                initGame();
+            } else {
+                document.getElementById('errorMsg1').textContent = '❌ Password errata. Riprova!';
+            }
+        }
+
+        // Inizializza il gioco
+        function initGame() {
+            drawCartesianPlane();
+            updatePointsList();
+            updateFoundCount();
+        }
+
+        // Disegna il piano cartesiano
+        function drawCartesianPlane() {
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const scale = 50;
+
+            // Pulisci canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Sfondo
+            ctx.fillStyle = '#f8f9fa';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Griglia
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            for (let i = -6; i <= 6; i++) {
+                // Linee verticali
+                ctx.beginPath();
+                ctx.moveTo(centerX + i * scale, 0);
+                ctx.lineTo(centerX + i * scale, canvas.height);
+                ctx.stroke();
+                
+                // Linee orizzontali
+                ctx.beginPath();
+                ctx.moveTo(0, centerY - i * scale);
+                ctx.lineTo(canvas.width, centerY - i * scale);
+                ctx.stroke();
+            }
+
+            // Assi principali
+            ctx.strokeStyle = '#8B0000';
+            ctx.lineWidth = 3;
+            
+            // Asse X
+            ctx.beginPath();
+            ctx.moveTo(0, centerY);
+            ctx.lineTo(canvas.width, centerY);
+            ctx.stroke();
+            
+            // Asse Y
+            ctx.beginPath();
+            ctx.moveTo(centerX, 0);
+            ctx.lineTo(centerX, canvas.height);
+            ctx.stroke();
+
+            // Etichette assi
+            ctx.fillStyle = '#8B0000';
+            ctx.font = 'bold 16px Georgia';
+            ctx.fillText('X', canvas.width - 30, centerY - 10);
+            ctx.fillText('Y', centerX + 10, 20);
+            
+            // Numeri sugli assi
+            ctx.font = '12px Georgia';
+            for (let i = -5; i <= 5; i++) {
+                if (i !== 0) {
+                    ctx.fillText(i, centerX + i * scale - 5, centerY + 20);
+                    ctx.fillText(i, centerX + 10, centerY - i * scale + 5);
+                }
+            }
+
+            // Disegna punti trovati
+            targetPoints.forEach(point => {
+                if (point.found) {
+                    const pixelX = centerX + point.x * scale;
+                    const pixelY = centerY - point.y * scale;
+                    
+                    ctx.fillStyle = '#228B22';
+                    ctx.beginPath();
+                    ctx.arc(pixelX, pixelY, 8, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    ctx.strokeStyle = '#fff';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                }
+            });
+        }
+
+        // Aggiorna lista punti
+        function updatePointsList() {
+            const list = document.getElementById('pointsList');
+            list.innerHTML = '';
+            
+            targetPoints.forEach(point => {
+                const item = document.createElement('div');
+                item.className = 'point-item' + (point.found ? ' completed' : '');
+                item.textContent = `(${point.x}, ${point.y})`;
+                list.appendChild(item);
+            });
+        }
+
+        // Aggiorna contatore
+        function updateFoundCount() {
+            const found = targetPoints.filter(p => p.found).length;
+            document.getElementById('foundCount').textContent = found;
+        }
+
+        // Gestione click sul canvas
+        canvas.addEventListener('click', function(e) {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const scale = 50;
+            
+            const cartX = (x - centerX) / scale;
+            const cartY = -(y - centerY) / scale;
+            
+            document.getElementById('coordDisplay').textContent = 
+                `Coordinate cliccate: (${cartX.toFixed(1)}, ${cartY.toFixed(1)})`;
+            
+            // Verifica se il punto è vicino a uno target
+            targetPoints.forEach(point => {
+                if (!point.found) {
+                    const distance = Math.sqrt(
+                        Math.pow(cartX - point.x, 2) + 
+                        Math.pow(cartY - point.y, 2)
+                    );
+                    
+                    if (distance <= tolerance) {
+                        point.found = true;
+                        drawCartesianPlane();
+                        updatePointsList();
+                        updateFoundCount();
+                        
+                        // Verifica vittoria
+                        if (targetPoints.every(p => p.found)) {
+                            setTimeout(() => {
+                                document.getElementById('page2').classList.remove('active');
+                                document.getElementById('page3').classList.add('active');
+                            }, 500);
+                        }
+                    }
+                }
+            });
+        });
+
+        // Reset gioco
+        function resetGame() {
+            targetPoints.forEach(point => point.found = false);
+            drawCartesianPlane();
+            updatePointsList();
+            updateFoundCount();
+            document.getElementById('coordDisplay').textContent = 
+                'Clicca sul piano per vedere le coordinate';
+        }
+
+        // Permetti invio con tasto Enter
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') checkInitialPassword();
+        });
+    </script>
+</body>
+</html>
