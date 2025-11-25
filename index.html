@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Georgia', serif;
-            background: linear-gradient(135deg, #8B0000 0%, #DC143C 100%);
+            background: linear-gradient(135deg, #006400 0%, #228B22 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -30,18 +30,18 @@
             max-width: 900px;
             width: 100%;
             text-align: center;
-            border: 3px solid #8B0000;
+            border: 3px solid #006400;
         }
 
         h1 {
-            color: #8B0000;
+            color: #006400;
             font-size: 2.5em;
             margin-bottom: 10px;
             font-weight: bold;
         }
 
         .subtitle {
-            color: #DC143C;
+            color: #228B22;
             font-size: 1.2em;
             margin-bottom: 30px;
             font-style: italic;
@@ -51,14 +51,14 @@
             width: 100%;
             padding: 15px;
             font-size: 1.1em;
-            border: 2px solid #DC143C;
+            border: 2px solid #228B22;
             border-radius: 10px;
             margin: 20px 0;
             text-align: center;
         }
 
         button {
-            background: #8B0000;
+            background: #006400;
             color: white;
             border: none;
             padding: 15px 40px;
@@ -71,13 +71,13 @@
         }
 
         button:hover {
-            background: #DC143C;
+            background: #228B22;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(139, 0, 0, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 100, 0, 0.3);
         }
 
         .error {
-            color: #DC143C;
+            color: #dc3545;
             margin-top: 10px;
             font-weight: bold;
         }
@@ -105,7 +105,7 @@
         }
 
         #canvas {
-            border: 3px solid #8B0000;
+            border: 3px solid #006400;
             border-radius: 10px;
             background: white;
             cursor: crosshair;
@@ -115,22 +115,22 @@
         }
 
         .instruction-box {
-            background: #fff3cd;
-            border: 2px solid #ffc107;
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
             padding: 15px;
             border-radius: 10px;
             margin: 20px 0;
-            color: #856404;
+            color: #1b5e20;
             text-align: left;
         }
 
         .coordinate-display {
-            background: #e3f2fd;
-            border: 2px solid #2196f3;
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
             padding: 15px;
             border-radius: 10px;
             margin: 20px 0;
-            color: #0d47a1;
+            color: #1b5e20;
             font-size: 1.1em;
         }
 
@@ -143,7 +143,7 @@
         }
 
         .point-item {
-            background: #8B0000;
+            background: #006400;
             color: white;
             padding: 8px 15px;
             border-radius: 20px;
@@ -173,7 +173,7 @@
         .latin-phrase {
             font-size: 2.5em;
             font-weight: bold;
-            color: #8B0000;
+            color: #006400;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
             margin: 30px 0;
             font-family: 'Times New Roman', serif;
@@ -193,12 +193,12 @@
         }
 
         .reset-btn {
-            background: #DC143C;
+            background: #228B22;
             margin-top: 20px;
         }
 
         .reset-btn:hover {
-            background: #8B0000;
+            background: #006400;
         }
     </style>
 </head>
@@ -233,7 +233,7 @@
                 <canvas id="canvas" width="600" height="600"></canvas>
 
                 <div style="margin: 20px 0;">
-                    <strong style="color: #8B0000; font-size: 1.2em;">Punti da trovare:</strong>
+                    <strong style="color: #006400; font-size: 1.2em;">Punti da trovare:</strong>
                     <div class="points-list" id="pointsList"></div>
                 </div>
 
@@ -244,7 +244,7 @@
                 <button class="reset-btn" onclick="resetGame()">Ricomincia</button>
             </div>
 
-            <div class="instruction-box" style="background: #e3f2fd; border-color: #2196f3; color: #0d47a1;">
+            <div class="instruction-box">
                 <strong>Cos'è il Piano Cartesiano?</strong><br>
                 Il piano cartesiano è un sistema di riferimento formato da due assi perpendicolari (x e y) 
                 che si incontrano nell'origine (0,0). Ogni punto ha due coordinate: la prima indica la posizione 
@@ -276,7 +276,7 @@
                 </div>
 
                 <div style="background: rgba(255,255,255,0.8); padding: 20px; border-radius: 10px; margin-top: 30px;">
-                    <p style="color: #8B0000; font-size: 1.2em; font-style: italic;">
+                    <p style="color: #006400; font-size: 1.2em; font-style: italic;">
                         "Il progresso è la luce dell'umanità"
                     </p>
                     <p style="color: #666; margin-top: 15px; font-size: 1em;">
@@ -286,8 +286,8 @@
                 </div>
             </div>
 
-            <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin-top: 30px; border: 2px solid #8B0000;">
-                <h2 style="color: #8B0000; margin-bottom: 20px;">Percorso Completato!</h2>
+            <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin-top: 30px; border: 2px solid #006400;">
+                <h2 style="color: #006400; margin-bottom: 20px;">Percorso Completato!</h2>
                 <div style="color: #333; text-align: left; max-width: 500px; margin: 0 auto; line-height: 2;">
                     Tutti i siti sono stati creati dagli studenti della scuola.
                 </div>
@@ -366,7 +366,7 @@
             }
 
             // Assi principali
-            ctx.strokeStyle = '#8B0000';
+            ctx.strokeStyle = '#006400';
             ctx.lineWidth = 3;
             
             // Asse X
@@ -382,7 +382,7 @@
             ctx.stroke();
 
             // Etichette assi
-            ctx.fillStyle = '#8B0000';
+            ctx.fillStyle = '#006400';
             ctx.font = 'bold 16px Georgia';
             ctx.fillText('X', canvas.width - 30, centerY - 10);
             ctx.fillText('Y', centerX + 10, 20);
